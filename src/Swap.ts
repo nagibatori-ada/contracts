@@ -10,6 +10,7 @@ export default class Swap {
         this.state.setBool("swapAvailable", false);
         this.state.setString("governanceId", "FcMhcz4HMprUD9AfDTbo3p7R9vaTFjFM2hFgDb1R8NTM");
         this.state.setString("stablecoinId", "DgWTaU8EopqJo5pPQKHkN7TzUVjxmNW8raYhwwTQJCkV");
+        this.state.setString("adminAddress", this.context.tx.sender);
     }
 
     @Action()
@@ -18,5 +19,17 @@ export default class Swap {
         assert(payments.length == 1, "should have 1 payment");
         assert(payments[0].assetId == (await this.state.getString("governanceId")), "payed token should be WSG");
         new Asset(await this.state.getString("assetId")).transfer(this.context.tx.sender, payments[0].amount.toNumber());
+    }
+
+    @Action()
+    async unlock() {
+        assert(await this.state.getString("adminAddress") == this.context.tx.sender, "should be admin");
+        this.state.setBool("swapAvailable", true);
+    }
+
+    @Action()
+    async lock() {
+        assert(await this.state.getString("adminAddress") == this.context.tx.sender, "should be admin");
+        this.state.setBool("swapAvailable", false);
     }
 }
