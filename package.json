@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@wavesenterprise/contract-core": "^1.0.14",
+    "typescript": "^4.8.3"
+  }
+}
